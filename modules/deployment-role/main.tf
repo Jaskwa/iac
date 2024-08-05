@@ -3,17 +3,14 @@ provider "aws" {
   region = var.region
 }
 
-data "aws_caller_identity" "current" {}
-
 locals {
-  aws-account-id = var.tooling-account != null ? var.tooling-account : data.aws_caller_identity.current.account_id
   assume-role-policy = jsonencode({
     Version: "2012-10-17"
     Statement: [
       {
         Effect: "Allow"
         Principal: {
-            AWS: "arn:aws:iam::${local.aws-account-id}:root"
+            AWS: "arn:aws:iam::${var.tooling-account}:root"
         }
         Action: "sts:AssumeRole"
       }
