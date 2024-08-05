@@ -17,8 +17,8 @@ variable artifact-name {
 
 variable attached-policies {
   type = map(list(object({ 
-    effect = string
-    actions = any
-    resource = string
+    effect = optional(string)
+    actions = optional(set(string))
+    resources = optional(set(string))
   })))
 }
