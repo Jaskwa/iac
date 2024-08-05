@@ -44,7 +44,7 @@ data "aws_iam_policy_document" "policies" {
 
 resource "aws_iam_policy" "policies" {
   for_each = { for idx, policy in data.aws_iam_policy_document.policies: idx => policy }
-  name = "${keys(var.attached-policies)[idx]}-policy"
+  name = "${keys(var.attached-policies)[each.key]}-policy"
   policy = each.value.json
 }
 
