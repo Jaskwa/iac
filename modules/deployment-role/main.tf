@@ -26,7 +26,7 @@ resource "aws_iam_role" "deployment-role" {
 data "aws_iam_policy_document" "policies" {
   for_each = var.attached-policies
   dynamic "statement" { 
-    for_each = each
+    for_each = each.value
     content {
       effect = statement.value["effect"]
       actions = statement.value["actions"]
