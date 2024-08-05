@@ -25,7 +25,7 @@ resource "aws_iam_role" "deployment-role" {
 
 data "aws_iam_policy_document" "policies" {
   for_each = var.attached-policies
-  dynamic "statement" { 
+  dynamic "statement" {
     for_each = each.value
     content {
       effect = statement.value["effect"]
@@ -35,11 +35,17 @@ data "aws_iam_policy_document" "policies" {
   }
 }
 
-resource "aws_iam_policy" "policies" {
-  for_each = { for idx, name in keys(var.attached-policies): idx => name }
+# resource "aws_iam_policy" "policies" {
+#   for_each = { for idx, name in keys(var.attached-policies): idx => name }
 
-  name = "${each.value}-policy"
-  policy = data.aws_iam_policy_document.policies[each.key].json
+#   name = "${each.value}-policy"
+#   policy = data.aws_iam_policy_document.policies[each.key].json
+# }
+
+resource "aws_iam_policy" "policies" {
+  for_each = { for idx, policy in data.aws_iam_policy_document.policies: idx => policy }
+  name = "${keys(var.attached-policies)[idx]}-policy"
+  policy = each.value.json
 }
 
 resource "aws_iam_role_policy_attachment" "deployment-role-policy" {
