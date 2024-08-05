@@ -39,7 +39,7 @@ resource "aws_iam_policy" "policies" {
   for_each = { for idx, policy in var.attached-policies: policy => idx }
 
   name = "${each.value.name}-policy"
-  policy = aws_iam_policy_document.policies[each.key].json
+  policy = data.aws_iam_policy_document.policies[each.key].json
 }
 
 resource "aws_iam_role_policy_attachment" "deployment-role-policy" {
