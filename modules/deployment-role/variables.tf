@@ -7,15 +7,15 @@ variable project {
   type = string
 }
 
-variable tooling-account {
+variable tooling_account {
   type = string
 }
 
-variable artifact-name {
+variable artifact_name {
   type = string
 }
 
-variable attached-policies {
+variable attached_policies {
   type = map(list(object({ 
     effect = optional(string)
     actions = optional(set(string))

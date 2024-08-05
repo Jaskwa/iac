@@ -10,7 +10,7 @@ locals {
       {
         Effect: "Allow"
         Principal: {
-            AWS: "arn:aws:iam::${var.tooling-account}:root"
+            AWS: "arn:aws:iam::${var.tooling_account}:root"
         }
         Action: "sts:AssumeRole"
       }
@@ -19,12 +19,12 @@ locals {
 }
 
 resource "aws_iam_role" "deployment-role" {
-  name = "${var.project}-${lower(var.artifact-name)}-deployer"
+  name = "${var.project}-${lower(var.artifact_name)}-deployer"
   assume_role_policy = local.assume-role-policy
 }
 
 data "aws_iam_policy_document" "policies" {
-  for_each = var.attached-policies
+  for_each = var.attached_policies
   dynamic "statement" {
     for_each = each.value
     content {
