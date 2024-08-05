@@ -23,12 +23,23 @@ resource "aws_iam_role" "deployment-role" {
   assume_role_policy = local.assume-role-policy
 }
 
-# Do I need to use aws_iam_policy_document to be able to for_each this with a list of statements?
-resource "aws_iam_policy" "policies" {
+data "aws_iam_policy_document" "policies" {
   for_each = var.attached-policies
+  dynamic "statement" { 
+    for_each = each
+    content {
+      effect = statement.value["effect"]
+      actions = statement.value["actions"]
+      resources = statement.value["resources"]
+    }
+  }
+}
 
-  name = "${each.key}-policy"
-  policy = each.value
+resource "aws_iam_policy" "policies" {
+  for_each = { for idx, policy in var.attached-policies: policy => idx }
+
+  name = "${each.value.name}-policy"
+  policy = aws_iam_policy_document.policies[each.key].json
 }
 
 resource "aws_iam_role_policy_attachment" "deployment-role-policy" {
