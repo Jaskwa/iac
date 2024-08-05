@@ -36,9 +36,9 @@ data "aws_iam_policy_document" "policies" {
 }
 
 resource "aws_iam_policy" "policies" {
-  for_each = { for idx, policy in toset(var.attached-policies): idx => policy }
+  for_each = { for idx, name in keys(var.attached-policies): idx => name }
 
-  name = "${each.value.name}-policy"
+  name = "${each.value}-policy"
   policy = data.aws_iam_policy_document.policies[each.key].json
 }
 
