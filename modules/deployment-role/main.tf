@@ -23,6 +23,10 @@ resource "aws_iam_role" "deployment-role" {
   assume_role_policy = local.assume-role-policy
 }
 
+output "deployment-role-arn" {
+  value = aws_iam_role.deployment-role.arn
+}
+
 data "aws_iam_policy_document" "policies" {
   for_each = var.attached_policies
   dynamic "statement" {
