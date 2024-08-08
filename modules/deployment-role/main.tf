@@ -4,6 +4,7 @@ provider "aws" {
 }
 
 locals {
+  terraform-state-access-policies = ["dynamo-state-access", "s3-state-access"]
   assume-role-policy = jsonencode({
     Version: "2012-10-17"
     Statement: [
@@ -47,6 +48,19 @@ resource "aws_iam_policy" "policies" {
 
 resource "aws_iam_role_policy_attachment" "deployment-role-policy" {
   for_each = aws_iam_policy.policies
+
+  role = aws_iam_role.deployment-role.name
+  policy_arn = each.value.arn
+}
+
+data "aws_iam_policy" "terraform-state-access" {
+  for_each = { for name in local.terraform-state-access-policies: name => name }
+  
+  name = each.key
+}
+
+resource "aws_iam_role_policy_attachment" "terraform-state-access" {
+  for_each = aws_iam_policy.terraform-state-access
 
   role = aws_iam_role.deployment-role.name
   policy_arn = each.value.arn
