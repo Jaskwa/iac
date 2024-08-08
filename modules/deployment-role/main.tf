@@ -60,7 +60,7 @@ data "aws_iam_policy" "terraform-state-access" {
 }
 
 resource "aws_iam_role_policy_attachment" "terraform-state-access" {
-  for_each = { for idx, policy in aws_iam_policy.terraform-state-access: idx => policy }
+  for_each = data.aws_iam_policy.terraform-state-access
 
   role = aws_iam_role.deployment-role.name
   policy_arn = each.value.arn
